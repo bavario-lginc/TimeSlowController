@@ -1,4 +1,4 @@
-# TimeSlowController Screen Effect without button!
+# TimeSlowController
 ## Avaliable with Syati
 
 Obj_arg0: Set the amount of frames that the timer will be on. If set to -1 will be on until it be off again.
