@@ -1,0 +1,17 @@
+{
+    "Name": "TimeSlowController",
+    "Author": "Aba gamer, Bavario, Super Hackio, VTXG",
+    "Description": "TimeSlowController",
+    "InstallDependencies": ["Syati_ObjectFactories"],
+    "ModuleData" : [
+      {
+        "NameObjFactory" : [
+          {
+            "Name" : "TimeSlowController",
+            "Function" : "createExtActor<TimeSlowController>",
+            "Include" : "TimeSlowController.h"
+          }
+        ]
+      }
+    ]
+}
