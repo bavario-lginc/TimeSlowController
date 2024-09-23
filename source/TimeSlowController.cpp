@@ -22,10 +22,8 @@ void TimeSlowController::init(const JMapInfoIter &rIter)
 }
 void TimeSlowController::control()
 {
-    if (mTimer != -1)
+    if (mTimer != -1 && MR::isOnSwitchA(this))
     {
-        if (MR::isOnSwitchA(this))
-        {
             if (!executeOn)
             {
                 MR::onTimeStopScreenEffect();
@@ -43,7 +41,6 @@ void TimeSlowController::control()
             }
             else
                 cTimer--;
-        }
     }
     else
     {
