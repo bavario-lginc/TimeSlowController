@@ -26,6 +26,7 @@ void TimeSlowController::control()
     {
             if (!executeOn)
             {
+                // The function will call the animation every frame but with executeOn I'll avoid this.
                 MR::onTimeStopScreenEffect();
                 MR::onSwitchB(this);
                 executeOn = true;
@@ -35,6 +36,7 @@ void TimeSlowController::control()
                 MR::offTimeStopScreenEffect();
                 MR::offSwitchB(this);
                 executeOn = true;
+                // Have to change from an int to a bool.
                 if (willKill > 0)
                     kill();
                 cTimer = mTimer;
