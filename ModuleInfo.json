@@ -1,7 +1,7 @@
 {
     "Name": "TimeSlowController",
     "Author": "Aba gamer, Bavario, Super Hackio, VTXG",
-    "Description": "Free TimeSlowControllwr",
+    "Description": "Free TimeSlowController",
     "InstallDependencies": ["Syati_ObjectFactories"],
     "ModuleData" : [
       {
