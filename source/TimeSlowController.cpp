@@ -36,7 +36,7 @@ void TimeSlowController::control()
                 MR::offTimeStopScreenEffect();
                 MR::offSwitchB(this);
                 executeOn = true;
-                // Have to change from an int to a bool.
+                // Have to change from int to bool.
                 if (willKill > 0)
                     kill();
                 cTimer = mTimer;
