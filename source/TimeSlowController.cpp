@@ -3,6 +3,7 @@
 TimeSlowController::TimeSlowController(const char *pName) : LiveActor(pName)
 {
     executeOn = false;
+    willKill = false;
 }
 void TimeSlowController::initAfterPlacement()
 {
@@ -24,25 +25,24 @@ void TimeSlowController::control()
 {
     if (mTimer != -1 && MR::isOnSwitchA(this))
     {
-            if (!executeOn)
-            {
-                // The function will call the animation every frame but with executeOn I'll avoid this.
-                MR::onTimeStopScreenEffect();
-                MR::onSwitchB(this);
-                executeOn = true;
-            }
-            else if (!cTimer)
-            {
-                MR::offTimeStopScreenEffect();
-                MR::offSwitchB(this);
-                executeOn = true;
-                // Have to change from int to bool.
-                if (willKill > 0)
-                    kill();
-                cTimer = mTimer;
-            }
-            else
-                cTimer--;
+        if (!executeOn)
+        {
+            MR::onTimeStopScreenEffect();
+            MR::onSwitchB(this);
+            executeOn = true;
+        }
+        else if (!cTimer)
+        {
+            MR::offTimeStopScreenEffect();
+            MR::offSwitchB(this);
+
+            executeOn = true;
+            if (willKill)
+                kill();
+            cTimer = mTimer;
+        }
+        else
+            cTimer--;
     }
     else
     {
@@ -56,8 +56,9 @@ void TimeSlowController::control()
         {
             MR::offTimeStopScreenEffect();
             MR::offSwitchB(this);
+
             executeOn = false;
-            if (willKill > 0)
+            if (willKill)
                 kill();
         }
     }
