@@ -19,15 +19,17 @@ void TimeSlowController::init(const JMapInfoIter &rIter)
     MR::invalidateClipping(this);
     MR::getJMapInfoArg0NoInit(rIter, &mTimer);
     MR::getJMapInfoArg1NoInit(rIter, &willKill);
+    MR::getJMapInfoArg2NoInit(rIter, &hTimer);
     cTimer = mTimer;
     makeActorAppeared();
 }
 void TimeSlowController::control()
 {
+if (!zTimer)
+{
   if (MR::isOnSwitchA(this))
     wasOnSwitchFlag = true; 
 // If I don't use a flag the object can be broken if SW_A is disabled in the middle of the action
-
     if (mTimer != -1 && wasOnSwitchFlag)
     {
         if (!executeOn)
@@ -42,6 +44,7 @@ void TimeSlowController::control()
             MR::offSwitchB(this);
             MR::offSwitchA(this);
             
+            zTimer = hTimer;
             wasOnSwitchFlag = false;
             executeOn = false;
             if (willKill)
@@ -64,9 +67,13 @@ void TimeSlowController::control()
             MR::offTimeStopScreenEffect();
             MR::offSwitchB(this);
 
+            zTimer = hTimer;
             executeOn = false;
             if (willKill)
                 kill();
         }
     }
 }
+}
+else
+ zTimer--;
