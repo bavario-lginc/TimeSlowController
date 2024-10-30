@@ -10,6 +10,8 @@ public:
 
     s32 mTimer;
     s32 cTimer;
+    s32 hTiner;
+    s32 zTimer;
  
     bool willKill;
     bool wasOnSwitchFlag;
