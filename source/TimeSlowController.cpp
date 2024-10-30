@@ -36,7 +36,7 @@ void TimeSlowController::control()
             MR::offTimeStopScreenEffect();
             MR::offSwitchB(this);
 
-            executeOn = true;
+            executeOn = false;
             if (willKill)
                 kill();
             cTimer = mTimer;
