@@ -12,5 +12,6 @@ public:
     s32 cTimer;
  
     bool willKill;
+    bool wasOnSwitchFlag;
     bool executeOn;
 };
