@@ -25,7 +25,7 @@ void TimeSlowController::init(const JMapInfoIter &rIter)
 void TimeSlowController::control()
 {
   if (MR::isOnSwitchA(this))
-    wasOnSwitchFlag = true;
+    wasOnSwitchFlag = true; // If I don't use a flag the object can be broken if SW_A is disabled in the middle of the action
 
     if (mTimer != -1 && wasOnSwitchFlag)
     {
