@@ -40,6 +40,7 @@ void TimeSlowController::control()
             MR::offTimeStopScreenEffect();
             MR::offSwitchB(this);
             
+            wasOnSwitchFlag = false;
             executeOn = false;
             if (willKill)
                 kill();
