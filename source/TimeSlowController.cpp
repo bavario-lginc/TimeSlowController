@@ -77,3 +77,4 @@ if (!zTimer)
 }
 else
  zTimer--;
+ MR::offSwitchA(this);
