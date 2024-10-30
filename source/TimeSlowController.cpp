@@ -3,6 +3,7 @@
 TimeSlowController::TimeSlowController(const char *pName) : LiveActor(pName)
 {
     executeOn = false;
+    wasOnSwitchFlag = false;
     willKill = false;
 }
 void TimeSlowController::initAfterPlacement()
@@ -23,7 +24,10 @@ void TimeSlowController::init(const JMapInfoIter &rIter)
 }
 void TimeSlowController::control()
 {
-    if (mTimer != -1 && MR::isOnSwitchA(this))
+  if (MR::isOnSwitchA(this))
+    wasOnSwitchFlag = true;
+
+    if (mTimer != -1 && wasOnSwitchFlag)
     {
         if (!executeOn)
         {
