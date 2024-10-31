@@ -74,7 +74,8 @@ if (!zTimer)
         }
     }
 }
-}
-else
+else {
  zTimer--;
  MR::offSwitchA(this);
+}
+}
