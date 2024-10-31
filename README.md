@@ -9,6 +9,6 @@ Obj_arg2: Cooldown frames until can be turned on again.
 
 ---------------------------------------------------------------------------
 
-SW_A: Turn this on for an amount of frames.
+SW_A: Input.
 
 SW_B: Link this to the SW_PARAM of objects that will slow down.
