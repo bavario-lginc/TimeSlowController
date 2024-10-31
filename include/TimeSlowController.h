@@ -8,10 +8,10 @@ public:
     virtual void control();
     virtual void initAfterPlacement();
 
-    s32 mTimer;
-    s32 cTimer;
-    s32 hTiner;
-    s32 zTimer;
+    s32 effectTimer;
+    s32 countableEffectTimer;
+    s32 cooldownTimer;
+    s32 countableCooldownTimer;
  
     bool willKill;
     bool wasOnSwitchFlag;

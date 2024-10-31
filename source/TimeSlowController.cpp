@@ -17,65 +17,66 @@ void TimeSlowController::init(const JMapInfoIter &rIter)
     MR::initDefaultPos(this, rIter);
     MR::connectToSceneMapObjMovement(this);
     MR::invalidateClipping(this);
-    MR::getJMapInfoArg0NoInit(rIter, &mTimer);
+    MR::getJMapInfoArg0NoInit(rIter, &effectTimer);
     MR::getJMapInfoArg1NoInit(rIter, &willKill);
-    MR::getJMapInfoArg2NoInit(rIter, &hTimer);
-    cTimer = mTimer;
+    MR::getJMapInfoArg2NoInit(rIter, &cooldownTimer);
+    countableEffectTimer = effectTimer;
     makeActorAppeared();
 }
 void TimeSlowController::control()
 {
-if (!zTimer)
-{
-  if (MR::isOnSwitchA(this))
-    wasOnSwitchFlag = true; 
-// If I don't use a flag the object can be broken if SW_A is disabled in the middle of the action
-    if (mTimer != -1 && wasOnSwitchFlag)
+    if (!countableCooldownTimer)
     {
-        if (!executeOn)
+        if (MR::isOnSwitchA(this))
+            wasOnSwitchFlag = true;
+            // If I don't use a flag the object can be broken if SW_A is disabled in the middle of the action
+        if (effectTimer != -1 && wasOnSwitchFlag)
         {
-            MR::onTimeStopScreenEffect();
-            MR::onSwitchB(this);
-            executeOn = true;
-        }
-        else if (!cTimer)
-        {
-            MR::offTimeStopScreenEffect();
-            MR::offSwitchB(this);
-            MR::offSwitchA(this);
-            
-            zTimer = hTimer;
-            wasOnSwitchFlag = false;
-            executeOn = false;
-            if (willKill)
-                kill();
-            cTimer = mTimer;
+            if (!executeOn)
+            {
+                MR::onTimeStopScreenEffect();
+                MR::onSwitchB(this);
+                executeOn = true;
+            }
+            else if (!countableEffectTimer)
+            {
+                MR::offTimeStopScreenEffect();
+                MR::offSwitchB(this);
+                MR::offSwitchA(this);
+
+                countableCooldownTimer = cooldownTimer;
+                wasOnSwitchFlag = false;
+                executeOn = false;
+                if (willKill)
+                    kill();
+                countableEffectTimer = effectTimer;
+            }
+            else
+                countableEffectTimer--;
         }
         else
-            cTimer--;
+        {
+            if (MR::isOnSwitchA(this) && !executeOn)
+            {
+                MR::onTimeStopScreenEffect();
+                MR::onSwitchA(this);
+                executeOn = true;
+            }
+            if (!MR::isOnSwitchA(this) && executeOn)
+            {
+                MR::offTimeStopScreenEffect();
+                MR::offSwitchB(this);
+
+                countableCooldownTimer = cooldownTimer;
+                executeOn = false;
+                if (willKill)
+                    kill();
+            }
+        }
     }
     else
     {
-        if (MR::isOnSwitchA(this) && !executeOn)
-        {
-            MR::onTimeStopScreenEffect();
-            MR::onSwitchA(this);
-            executeOn = true;
-        }
-        if (!MR::isOnSwitchA(this) && executeOn)
-        {
-            MR::offTimeStopScreenEffect();
-            MR::offSwitchB(this);
-
-            zTimer = hTimer;
-            executeOn = false;
-            if (willKill)
-                kill();
-        }
+        countableCooldownTimer--;
+        MR::offSwitchA(this);
     }
-}
-else {
- zTimer--;
- MR::offSwitchA(this);
-}
 }
