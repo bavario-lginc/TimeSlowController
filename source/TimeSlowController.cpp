@@ -1,82 +1,57 @@
 #include "TimeSlowController.h"
 
-TimeSlowController::TimeSlowController(const char *pName) : LiveActor(pName)
-{
-    executeOn = false;
-    wasOnSwitchFlag = false;
-    willKill = false;
+TimeSlowController::TimeSlowController(const char *pName) : LiveActor(pName) {
+    mDuration = -1; // No time limit
+    mTimer = 0;
+    mWillKill = false;
 }
-void TimeSlowController::initAfterPlacement()
-{
+void TimeSlowController::initAfterPlacement() {
     MR::createTimeStopScreenEffect();
 }
-void TimeSlowController::init(const JMapInfoIter &rIter)
-{
+void TimeSlowController::init(const JMapInfoIter &rIter) {
     MR::useStageSwitchReadA(this, rIter);
     MR::useStageSwitchReadB(this, rIter);
     MR::initDefaultPos(this, rIter);
     MR::connectToSceneMapObjMovement(this);
     MR::invalidateClipping(this);
-    MR::getJMapInfoArg0NoInit(rIter, &effectTimer);
-    MR::getJMapInfoArg1NoInit(rIter, &willKill);
-    MR::getJMapInfoArg2NoInit(rIter, &cooldownTimer);
-    countableEffectTimer = effectTimer;
+    MR::getJMapInfoArg0NoInit(rIter, &mDuration);
+    MR::getJMapInfoArg1NoInit(rIter, &mWillKill);
+    initNerve(&NrvTimeSlowController::NrvWait::sInstance, 0);
     makeActorAppeared();
 }
-void TimeSlowController::control()
-{
-    if (!countableCooldownTimer)
-    {
-        if (MR::isOnSwitchA(this))
-            wasOnSwitchFlag = true;
-            // If I don't use a flag the object can be broken if SW_A is disabled in the middle of the action
-        if (effectTimer != -1 && wasOnSwitchFlag)
-        {
-            if (!executeOn)
-            {
-                MR::onTimeStopScreenEffect();
-                MR::onSwitchB(this);
-                executeOn = true;
-            }
-            else if (!countableEffectTimer)
-            {
-                MR::offTimeStopScreenEffect();
-                MR::offSwitchB(this);
-                MR::offSwitchA(this);
-
-                countableCooldownTimer = cooldownTimer;
-                wasOnSwitchFlag = false;
-                executeOn = false;
-                if (willKill)
-                    kill();
-                countableEffectTimer = effectTimer;
-            }
-            else
-                countableEffectTimer--;
-        }
-        else
-        {
-            if (MR::isOnSwitchA(this) && !executeOn)
-            {
-                MR::onTimeStopScreenEffect();
-                MR::onSwitchA(this);
-                executeOn = true;
-            }
-            if (!MR::isOnSwitchA(this) && executeOn)
-            {
-                MR::offTimeStopScreenEffect();
-                MR::offSwitchB(this);
-
-                countableCooldownTimer = cooldownTimer;
-                executeOn = false;
-                if (willKill)
-                    kill();
-            }
-        }
+void TimeSlowController::exeWait () {
+    if (MR::isOnSwitchA(this)) {
+        exeOnEffect();
+        setNerve(&NrvTimeSlowController::NrvEffect::sInstance);
     }
-    else
-    {
-        countableCooldownTimer--;
-        MR::offSwitchA(this);
+}
+void TimeSlowController::exeEffect () {
+    if ((mDuration == -1 && !MR::isOnSwitchA(this)) || --mTimer == 0) {
+        exeOffEffect();
+        setNerve(&NrvTimeSlowController::NrvWait::sInstance);
     }
+}
+void TimeSlowController::exeOnEffect() {
+    if (mDuration != -1) // Time limit
+        mTimer = mDuration;
+    MR::onTimeStopScreenEffect();
+    MR::onSwitchB(this);
+}
+void TimeSlowController::exeOffEffect() {
+    MR::offTimeStopScreenEffect();
+    MR::offSwitchB(this);
+    if (mWillKill) 
+        kill();
+}
+
+namespace NrvTimeSlowController {
+    void NrvWait::execute(Spine *pSpine) const {
+        ((TimeSlowController *)pSpine->mExecutor)->exeWait();
+    }
+    void NrvEffect::execute(Spine *pSpine) const {
+        ((TimeSlowController *)pSpine->mExecutor)->exeEffect();
+    }
+
+    NrvWait(NrvWait::sInstance);
+    NrvEffect(NrvEffect::sInstance);
 }

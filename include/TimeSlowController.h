@@ -5,15 +5,17 @@ class TimeSlowController : public LiveActor {
 public:
     TimeSlowController(const char *pName);
     virtual void init(const JMapInfoIter &rIter);
-    virtual void control();
     virtual void initAfterPlacement();
+    void exeWait();
+    void exeEffect();
+    void exeOnEffect();
+    void exeOffEffect();
+    s32 mDuration;
+    s32 mTimer;
+    bool mWillKill;
+};
 
-    s32 effectTimer;
-    s32 countableEffectTimer;
-    s32 cooldownTimer;
-    s32 countableCooldownTimer;
- 
-    bool willKill;
-    bool wasOnSwitchFlag;
-    bool executeOn;
+namespace NrvTimeSlowController {
+    NERVE(NrvWait);
+    NERVE(NrvEffect);
 };

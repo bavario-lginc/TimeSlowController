@@ -1,7 +1,7 @@
 {
     "Name": "TimeSlowController",
-    "Author": "Aba gamer, Bavario, Super Hackio, VTXG",
-    "Description": "Free TimeSlowController",
+    "Author": "Bavario (idea by aba gamer)",
+    "Description": "A controller that can slow down time.",
     "InstallDependencies": ["Syati_ObjectFactories"],
     "ModuleData" : [
       {
